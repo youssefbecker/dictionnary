@@ -10,18 +10,19 @@ func (d Dictionary) Add(word, definition string) {
 	d[word] = definition
 }
 
-// Get a
+// Get affiche la définition d'un mot spécifique.
 func (d Dictionary) Get(word string) {
 	definition := d[word]
-	fmt.Printf(word, definition)
+		fmt.Printf("%s : %s\n", word, definition)
+	
 }
 
-// Remove
+// Remove supprime un mot du dictionnaire.
 func (d Dictionary) Remove(word string) {
 	delete(d, word)
 }
 
-// List
+// List affiche la liste triée des mots et de leurs définitions.
 func (d Dictionary) List() {
 	var words []string
 	for word := range d {
@@ -34,7 +35,7 @@ func (d Dictionary) List() {
 }
 
 func main() {
-	// Créer un dictionnaire vide
+	//dictionnaire vide
 	dictionary := make(Dictionary)
 
 	// Ajout des mots
