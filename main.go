@@ -14,15 +14,15 @@ func (d Dictionary) Add(word, definition string) {
 // Get a
 func (d Dictionary) Get(word string) {
 	definition := d[word]
-		fmt.Printf( word, definition)
+	fmt.Printf(word, definition)
 }
 
-// Remove 
+// Remove
 func (d Dictionary) Remove(word string) {
 	delete(d, word)
 }
 
-// List 
+// List
 func (d Dictionary) List() {
 	var words []string
 	for word := range d {
