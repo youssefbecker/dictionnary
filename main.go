@@ -1,53 +1,51 @@
 package main
 
 import (
-    "fmt"
-    "maps"
+	"fmt"
+	"sort"
 )
 
-func Remove(word string) {
-	
+type Dictionary map[string]string
+
+func (d Dictionary) Add(word, definition string) {
+	d[word] = definition
 }
 
-func Get(word string) {
-	
+// Get a
+func (d Dictionary) Get(word string) {
+	definition := d[word]
+		fmt.Printf( word, definition)
 }
 
-func List(word string) {
-	
+// Remove 
+func (d Dictionary) Remove(word string) {
+	delete(d, word)
+}
+
+// List 
+func (d Dictionary) List() {
+	var words []string
+	for word := range d {
+		words = append(words, word)
+	}
+
+	sort.Strings(words)
+
+	for _, word := range words {
+		fmt.Printf("%s : %s\n", word, d[word])
+	}
 }
 
 func main() {
+	// Créer un dictionnaire vide
+	dictionary := make(Dictionary)
 
-    m := make(map[string]int)
+	// Ajout des mots
+	dictionary.Add("1", "mot 1")
+	dictionary.Add("2", "mot 2")
+	dictionary.Add("3", "mot 3")
 
-    m["k1"] = 7
-    m["k2"] = 13
-
-    fmt.Println("map:", m)
-
-    v1 := m["k1"]
-    fmt.Println("v1:", v1)
-
-    v3 := m["k3"]
-    fmt.Println("v3:", v3)
-
-    fmt.Println("len:", len(m))
-
-    delete(m, "k2")
-    fmt.Println("map:", m)
-
-    clear(m)
-    fmt.Println("map:", m)
-
-    _, prs := m["k2"]
-    fmt.Println("prs:", prs)
-
-    n := map[string]int{"foo": 1, "bar": 2}
-    fmt.Println("map:", n)
-
-    n2 := map[string]int{"foo": 1, "bar": 2}
-    if maps.Equal(n, n2) {
-        fmt.Println("n == n2")
-    }
+	dictionary.Get("1")
+	dictionary.Remove("2")
+	dictionary.List()
 }
