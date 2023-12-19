@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 type Dictionary map[string]string
@@ -29,8 +28,6 @@ func (d Dictionary) List() {
 		words = append(words, word)
 	}
 
-	sort.Strings(words)
-
 	for _, word := range words {
 		fmt.Printf("%s : %s\n", word, d[word])
 	}
@@ -45,7 +42,7 @@ func main() {
 	dictionary.Add("2", "mot 2")
 	dictionary.Add("3", "mot 3")
 
-	dictionary.Get("1")
+	//dictionary.Get("1")
 	dictionary.Remove("2")
 	dictionary.List()
 }
