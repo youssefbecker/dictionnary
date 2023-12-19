@@ -6,23 +6,24 @@ import (
 
 type Dictionary map[string]string
 
+// Ajout 
 func (d Dictionary) Add(word, definition string) {
 	d[word] = definition
 }
 
-// Get affiche la définition d'un mot spécifique.
+// Get
 func (d Dictionary) Get(word string) {
 	definition := d[word]
 		fmt.Printf("%s : %s\n", word, definition)
 	
 }
 
-// Remove supprime un mot du dictionnaire.
+// Remove
 func (d Dictionary) Remove(word string) {
 	delete(d, word)
 }
 
-// List affiche la liste triée des mots et de leurs définitions.
+// List
 func (d Dictionary) List() {
 	var words []string
 	for word := range d {
