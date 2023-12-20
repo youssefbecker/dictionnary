@@ -7,7 +7,7 @@ import (
 )
 
 type Dictionary struct {
-	Entries map[string]string `json:"entries"`
+	Entries map[string]string `json:"mes mots"`
 }
 
 func NewDictionary() *Dictionary {
