@@ -1,50 +1,86 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
 )
 
-type Dictionary map[string]string
-
-// Ajout 
-func (d Dictionary) Add(word, definition string) {
-	d[word] = definition
+type Dictionary struct {
+	Entries map[string]string `json:"entries"`
 }
 
-// Get
-func (d Dictionary) Get(word string) {
-	definition := d[word]
-		fmt.Printf("%s : %s\n", word, definition)
-	
+func NewDictionary() *Dictionary {
+	return &Dictionary{
+		Entries: make(map[string]string),
+	}
 }
 
-// Remove
-func (d Dictionary) Remove(word string) {
-	delete(d, word)
+func (d *Dictionary) Add(word, definition string) {
+	d.Entries[word] = definition
 }
 
-// List
-func (d Dictionary) List() {
-	var words []string
-	for word := range d {
-		words = append(words, word)
+func (d *Dictionary) Get(word string) {
+	definition := d.Entries[word]
+	fmt.Printf("%s: %s\n", word, definition)
+}
+
+func (d *Dictionary) Remove(word string) {
+	delete(d.Entries, word)
+}
+
+func (d *Dictionary) List() {
+	for word, definition := range d.Entries {
+		fmt.Printf("%s: %s\n", word, definition)
+	}
+}
+
+func (d *Dictionary) SaveToFile(filename string) error {
+	data, err := json.Marshal(d)
+	if err != nil {
+		return err
 	}
 
-	for _, word := range words {
-		fmt.Printf("%s : %s\n", word, d[word])
+	return ioutil.WriteFile(filename, data, 0644)
+}
+
+func LoadFromFile(filename string) (*Dictionary, error) {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
 	}
+
+	var dictionary Dictionary
+	err = json.Unmarshal(data, &dictionary)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dictionary, nil
 }
 
 func main() {
-	//dictionnaire vide
-	dictionary := make(Dictionary)
+	// Créer un dictionnaire vide
+	dictionary := NewDictionary()
 
 	// Ajout des mots
 	dictionary.Add("1", "mot 1")
 	dictionary.Add("2", "mot 2")
 	dictionary.Add("3", "mot 3")
 
-	//dictionary.Get("1")
-	dictionary.Remove("2")
-	dictionary.List()
+	// Enregistre dans le JSON
+	err := dictionary.SaveToFile("dictionary.json")
+
+	// Charger le dictionnaire depuis le fichier JSON
+	loadedDictionary, err := LoadFromFile("dictionary.json")
+	if err != nil {
+		fmt.Println("Erreur", err)
+		os.Exit(1)
+	}
+
+	// Utiliser le dictionnaire chargé
+	loadedDictionary.Get("1")
+	loadedDictionary.Remove("2")
+	loadedDictionary.List()
 }
