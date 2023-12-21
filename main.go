@@ -53,11 +53,11 @@ func get(w http.ResponseWriter, req *http.Request) {
 	dict := dictionnary.NewDictionnary(filePath)
 	parts := strings.Split(req.URL.Path, "/")
 	if len(parts) < 3 {
-		http.Error(w, "Missing 'name' parameter", http.StatusBadRequest)
+		http.Error(w, "Missing 'nom' parameter", http.StatusBadRequest)
 		return
 	}
-	name := parts[2]
-	entry, err := dict.Get(name)
+	nom := parts[2]
+	entry, err := dict.Get(nom)
 	if err != nil {
 		http.Error(w, "Entry not found", http.StatusNotFound)
 		return
@@ -81,8 +81,8 @@ func remove(w http.ResponseWriter, req *http.Request) {
 	dict := dictionnary.NewDictionnary(filePath)
 	parts := strings.Split(req.URL.Path, "/")
 
-	name := parts[2]
-	_, err := dict.Remove(name)
+	nom := parts[2]
+	_, err := dict.Remove(nom)
 	if err != nil {
 		http.Error(w, "Entry not found", http.StatusNotFound)
 		return
