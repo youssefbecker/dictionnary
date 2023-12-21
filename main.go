@@ -11,14 +11,14 @@ import (
 
 func add(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodPost {
-		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		http.Error(w, "Method non autorisé", http.StatusMethodNotAllowed)
 		return
 	}
 
 	filePath := "dictionary.json"
 	dict := dictionnary.NewDictionnary(filePath)
 	body, err := ioutil.ReadAll(req.Body)
-	
+
 	if err != nil {
 		http.Error(w, "Error reading request body", http.StatusInternalServerError)
 		return
@@ -29,7 +29,7 @@ func add(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, "Error decoding JSON", http.StatusBadRequest)
 		return
 	}
-	_, err = dict.Add(entry.Name, entry.Definition, cs.action)
+	_, err = dict.Add(entry.Nom, entry.Prenom, cs.action)
 	if err != nil {
 		http.Error(w, "Error adding entry", http.StatusInternalServerError)
 		return
@@ -44,7 +44,6 @@ func add(w http.ResponseWriter, req *http.Request) {
 	w.Write(jsonData)
 }
 
-
 func remove(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodDelete {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -53,9 +52,9 @@ func remove(w http.ResponseWriter, req *http.Request) {
 	filePath := "dictionary.json"
 	dict := dictionnary.NewDictionnary(filePath)
 	parts := strings.Split(req.URL.Path, "/")
-	
+
 	name := parts[2]
-	_, err :=dict.Remove(name)
+	_, err := dict.Remove(name)
 	if err != nil {
 		http.Error(w, "Entry not found", http.StatusNotFound)
 		return
@@ -73,7 +72,7 @@ func list(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	jsonData, err := json.MarshalIndent(entries, "", "  ")
-	
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonData)
@@ -103,15 +102,12 @@ func get(w http.ResponseWriter, req *http.Request) {
 	w.Write(jsonData)
 }
 
-
-
-type ChannelStore struct{
+type ChannelStore struct {
 	action chan string
 }
 
-
 func (cs *ChannelStore) worker() {
-	
+
 	for {
 		select {
 		case action := <-cs.action:
@@ -128,12 +124,11 @@ var cs = ChannelStore{
 
 func main() {
 	go cs.worker()
-	
+
 	http.HandleFunc("/add", add)
 	http.HandleFunc("/get/", get)
-	http.HandleFunc("/remove/",remove)
+	http.HandleFunc("/remove/", remove)
 	http.HandleFunc("/list", list)
- 
 
 	http.ListenAndServe(":8090", nil)
 }

@@ -8,8 +8,8 @@ import (
 
 
 type Entry struct {
-	Name  string `json:"name"`
-	Definition string `json:"definition"`
+	Nom  string `json:"nom"`
+	Prenom string `json:"prenom"`
 }
 
 type Dictionnary struct {
@@ -74,7 +74,7 @@ func NewDictionnary(filePath string) Dictionnary {
 	}
 }
 
-func (dict *Dictionnary) Add(name string, definition string, action chan string) (Entry, error) {
+func (dict *Dictionnary) Add(nom string, prenom string, action chan string) (Entry, error) {
 	action <- "adding"
 	entries, err := dict.loadFromFile()
 	if err != nil {
@@ -82,25 +82,24 @@ func (dict *Dictionnary) Add(name string, definition string, action chan string)
 		return Entry{}, err
 	}
 
-	// check if the name already exists in the dictionnary
 	for i, entry := range entries {
-		if entry.Name == name {
+		if entry.Nom == nom {
 		
-			fmt.Printf("Updating existing entry '%s': %s to %s\n", name, entry.Definition, definition)
-			entries[i].Definition = definition
+			fmt.Printf("Updating existing entry '%s': %s to %s\n", nom, entry.Prenom, prenom)
+			entries[i].Prenom = prenom
 			dict.saving(entries)
 			return entry, nil
 		}
 	}
 
-	entry := Entry{Name: name, Definition: definition}
+	entry := Entry{Nom: nom, Prenom: prenom}
 	entries = append(entries, entry)
 	dict.saving(entries)
 	return entry, nil
 
 }
 
-func (dict *Dictionnary) Get(name string) (Entry, error) {
+func (dict *Dictionnary) Get(nom string) (Entry, error) {
 	entries, err := dict.loadFromFile()
 	if err != nil {
 		fmt.Println("Error loading from file:", err)
@@ -109,16 +108,16 @@ func (dict *Dictionnary) Get(name string) (Entry, error) {
 
 	for _, entry := range entries {
 		fmt.Println("Found:", entry)
-		if entry.Name == name {
+		if entry.Nom == nom {
 			return entry, nil
 		}
 	}
 
-	fmt.Println("Key not found:", name)
+	fmt.Println("Key not found:", nom)
 	return Entry{}, nil
 }
 
-func (dict *Dictionnary) Remove(name string) (Entry, error) {
+func (dict *Dictionnary) Remove(nom string) (Entry, error) {
 	entries, err := dict.loadFromFile()
 	if err != nil {
 		fmt.Println("Error loading from file:", err)
@@ -126,17 +125,15 @@ func (dict *Dictionnary) Remove(name string) (Entry, error) {
 	}
 
 	for i, entry := range entries {
-		if entry.Name == name {
+		if entry.Nom == nom {
 			fmt.Println("Removing:", entry)
-			// Remove the entry from the slice
 			entries = append(entries[:i], entries[i+1:]...)
 			dict.saving(entries)
-			// ch <- name
 			return entry, nil
 		}
 	}
 
 
-	fmt.Println("Key not found:", name)
+	fmt.Println("Key not found:", nom)
 	return Entry{}, nil
 }
