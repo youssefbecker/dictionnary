@@ -1,1 +1,14 @@
-{"mes mots":{"1":"mot 1","2":"mot 2","3":"mot 3"}}
+[
+  {
+    "nom": "youss",
+    "prenom": "becker"
+  },
+  {
+    "nom": "ousmanou",
+    "prenom": "youss"
+  },
+  {
+    "nom": "yhaya",
+    "prenom": "oum"
+  }
+]

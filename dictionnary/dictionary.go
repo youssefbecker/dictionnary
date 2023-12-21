@@ -6,9 +6,8 @@ import (
 	"os"
 )
 
-
 type Entry struct {
-	Nom  string `json:"nom"`
+	Nom    string `json:"nom"`
 	Prenom string `json:"prenom"`
 }
 
@@ -17,15 +16,7 @@ type Dictionnary struct {
 }
 
 
-func (dict *Dictionnary) List() ([]Entry, error){
-	entries, err := dict.loadFromFile()
-	if err != nil {
-		fmt.Println("Error loading from file:", err)
-		return nil, nil
-	}
 
-	return entries, nil
-}
 
 func (dict *Dictionnary) saveToFile(entries []Entry) error {
 	jsonData, err := json.MarshalIndent(entries, "", "  ")
@@ -47,7 +38,6 @@ func (dict *Dictionnary) loadFromFile() ([]Entry, error) {
 		return nil, err
 	}
 
-	// Check if the JSON data is empty
 	if len(jsonData) == 0 {
 		return nil, nil
 	}
@@ -74,8 +64,7 @@ func NewDictionnary(filePath string) Dictionnary {
 	}
 }
 
-func (dict *Dictionnary) Add(nom string, prenom string, action chan string) (Entry, error) {
-	action <- "adding"
+func (dict *Dictionnary) Add(nom string, prenom string) (Entry, error) {
 	entries, err := dict.loadFromFile()
 	if err != nil {
 		fmt.Println("Error loading from file:", err)
@@ -84,7 +73,6 @@ func (dict *Dictionnary) Add(nom string, prenom string, action chan string) (Ent
 
 	for i, entry := range entries {
 		if entry.Nom == nom {
-		
 			fmt.Printf("Updating existing entry '%s': %s to %s\n", nom, entry.Prenom, prenom)
 			entries[i].Prenom = prenom
 			dict.saving(entries)
@@ -96,7 +84,6 @@ func (dict *Dictionnary) Add(nom string, prenom string, action chan string) (Ent
 	entries = append(entries, entry)
 	dict.saving(entries)
 	return entry, nil
-
 }
 
 func (dict *Dictionnary) Get(nom string) (Entry, error) {
@@ -117,6 +104,16 @@ func (dict *Dictionnary) Get(nom string) (Entry, error) {
 	return Entry{}, nil
 }
 
+func (dict *Dictionnary) List() ([]Entry, error){
+	entries, err := dict.loadFromFile()
+	if err != nil {
+		fmt.Println("Error loading from file:", err)
+		return nil, nil
+	}
+
+	return entries, nil
+}
+
 func (dict *Dictionnary) Remove(nom string) (Entry, error) {
 	entries, err := dict.loadFromFile()
 	if err != nil {
@@ -132,7 +129,6 @@ func (dict *Dictionnary) Remove(nom string) (Entry, error) {
 			return entry, nil
 		}
 	}
-
 
 	fmt.Println("Key not found:", nom)
 	return Entry{}, nil
