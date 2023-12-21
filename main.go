@@ -3,7 +3,6 @@ package main
 import (
 	"dico_go/dictionnary"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -111,24 +110,14 @@ type ChannelStore struct {
 	action chan string
 }
 
-func (cs *ChannelStore) worker() {
 
-	for {
-		select {
-		case action := <-cs.action:
-			if action == "adding" {
-				fmt.Println("Element is being added, please wait ...")
-			}
-		}
-	}
-}
 
 var cs = ChannelStore{
 	action: make(chan string, 1),
 }
 
 func main() {
-	go cs.worker()
+	
 
 	http.HandleFunc("/add", add)
 	http.HandleFunc("/get/", get)
